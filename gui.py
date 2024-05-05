@@ -40,16 +40,6 @@ def load_video(path):
     std = tf.math.reduce_std(tf.cast(frames, tf.float32))
     return tf.cast((frames - mean), tf.float32) / std
 
-def load_alignments(path): 
-    with open(path, 'r') as f: 
-        lines = f.readlines() 
-    tokens = []
-    for line in lines:
-        line = line.split()
-        if line[2] != 'sil': 
-            tokens = [*tokens,' ',line[2]]
-    return char_to_num(tf.reshape(tf.strings.unicode_split(tokens, input_encoding='UTF-8'), (-1)))[1:]
-
 def load_data(path): 
     # path = bytes.decode(path.numpy())
     file_name = path.split('/')[-1].split('.')[0]
@@ -115,7 +105,6 @@ def select_video():
         filetypes=[("Video Files", "*.mp4 *.avi *.mkv *.wmv *.mpg")] 
     )
     if video_filepath:
-        # Update label to show selected file path
         file_path_label.config(text=f"Selected File: {video_filepath}", font=("Arial", 18))
         text_output.set("Video file selected.\nClick 'Process Video' to start processing.")
         text_display.insert(tk.END, text_output.get() + "\n")
@@ -140,8 +129,7 @@ root = tk.Tk()
 root.geometry("800x500")
 root.title("Video to Text Interface")
 
-# Input section - File selection
-video_filepath_var = tk.StringVar()  # To store selected file path
+video_filepath_var = tk.StringVar()
 file_path_label = tk.Label(root, text="No file selected yet", font=("Arial", 18))
 file_path_label.pack(padx=10, pady=10)
 
